@@ -1,24 +1,159 @@
-# Compiled class file
-*.class
+import java.util.*;
 
-# Log file
-*.log
+public class Main{
+    public String text;
+     public Main(String text) {
+       this.text = text;
+    }
 
-# BlueJ files
-*.ctxt
+    // Method to count words
+    public int countWords() {
+        return text.split("\\s").length; 
+    }
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    // Method to count characters
+    public int countCharacters() {
+        return text.length(); 
+        
+    }
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+    // Method to count characters without spaces
+    public int countCharactersWithoutSpaces() {
+        return text.replace(" ", "").length(); 
+    }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+    // Method to count syllables
+    public int countSyllables() {
+        int syllableCount = 0;
+        String[] words = text.split("\\s");
+        for (String word : words) {
+            syllableCount += Main(word); 
+        }
+        return syllableCount;
+    }
+
+    // Method to count syllables in a single word
+    public int Main(String word) {
+        word = word.toLowerCase(); 
+            if (word.length() == 0) return 0; 
+              int count = 0;
+                boolean lastWasVowel = false; 
+                   for (char c : word.toCharArray()) {
+                     if ("aeiou".indexOf(c) >= 0) { 
+                      if (!lastWasVowel) {
+                    count++; 
+                    lastWasVowel = true;
+                }
+            } else {
+                lastWasVowel = false; 
+            }
+                   }
+        return count; 
+    }
+
+
+    // Method to count sentences
+    public int countSentences() {
+        return text.split("[.!?]").length; 
+    }
+
+    // Method to count paragraphs
+    public int countParagraphs() {
+        return text.split("\\n").length; 
+    }
+
+    // Method to estimate reading time (mins)
+    public double calculateReadingTime() {
+        int wordsPerMinute = 200; 
+        return (double) countWords() / wordsPerMinute;
+    }
+    
+
+    // Method to estimate speaking time (mins)
+    public double calculateSpeakingTime() {
+        int wordsPerMinute = 125; 
+        return (double) countWords() / wordsPerMinute;
+    }
+    
+
+    // Method to get word frequency distribution
+    public String getWordFrequencyDistribution() {
+        StringBuilder frequency = new StringBuilder(); 
+        String[] words = text.split("\\s");
+        String[] uniqueWords = removeDuplicates(words);
+        for (String uniqueWord : uniqueWords) {
+            int count = 0; 
+              for (String word : words) {
+                if (uniqueWord.equalsIgnoreCase(word)) {
+                    count++;
+                }
+            }
+            frequency.append(uniqueWord).append(": ").append(count).append("\n"); 
+        }
+        return frequency.toString();
+    }
+
+
+    // Helper method to remove duplicates from an array of strings
+    public String[] removeDuplicates(String[] words) {
+        String[] uniqueWords = new String[words.length]; 
+        int index = 0;
+        for (String word : words) {
+            boolean found = false; 
+               for (int j = 0; j < index; j++) {
+                if (uniqueWords[j].equalsIgnoreCase(word)) {
+                    found = true; 
+                    break; 
+                }
+            }
+            if (!found) {
+                uniqueWords[index++] = word; 
+            }
+        }
+        
+        String[] result = new String[index]; 
+        System.arraycopy(uniqueWords, 0, result, 0, index); 
+        return result; 
+    }
+
+    // Main method to run the program
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Checking if they are a student
+        System.out.print("Are you a student? (yes/no): ");
+        String isStudent = scanner.nextLine().toLowerCase(); 
+
+        // If they are not student it will denied the access
+        if (!isStudent.equals("yes")) {
+            System.out.println("Access denied. Only students can use this system.");
+            return; 
+        }
+
+        //To input the text from user
+        System.out.println("Enter your text (end with an empty line): ");
+        StringBuilder inputText = new StringBuilder(); 
+        String line;
+        while (!(line = scanner.nextLine()).isEmpty()) {
+            inputText.append(line).append("\n"); 
+        }
+        
+
+        // Create instance of word with the provided text
+        Main wordCounter = new Main(inputText.toString());
+
+        // Printing the Variables
+        System.out.println("Word Count: " + wordCounter.countWords()); 
+        System.out.println("Character Count: " + wordCounter.countCharacters()); 
+        System.out.println("Character Count (without spaces): " + wordCounter.countCharactersWithoutSpaces()); 
+        System.out.println("Syllable Count: " + wordCounter.countSyllables()); 
+        System.out.println("Sentence Count: " + wordCounter.countSentences()); 
+        System.out.println("Paragraph Count: " + wordCounter.countParagraphs()); 
+        System.out.printf("Estimated Reading Time:%.2f minutes%n", wordCounter.calculateReadingTime()); 
+        System.out.printf("Estimated Speaking Time:%.2f minutes%n", wordCounter.calculateSpeakingTime()); 
+        System.out.println("Word Frequency Distribution:\n" + wordCounter.getWordFrequencyDistribution());
+
+        scanner.close();
+    }
+}
+
